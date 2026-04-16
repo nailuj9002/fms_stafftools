@@ -17,6 +17,12 @@ if SERVER then
         net.Send(ply)
     end
 
+    function FMSUtils.NickAndID64(ply)
+        if IsValid(ply) then
+            return(ply:Nick()..':'..ply:SteamID64())
+        end
+    end
+
     function FMSUtils.LogMessage(string)
         file.CreateDir("fluffy-mod-suite/logs/"..os.date("%Y/%B"))
 

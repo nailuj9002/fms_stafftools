@@ -9,7 +9,7 @@ function FMSCmds:registerCommand(cmdString, argTable, permLevel, func)
     self[cmdPrefix..cmdString]={}
     self[cmdPrefix..cmdString].func = func
     self[cmdPrefix..cmdString].argTable = argTable
-    self[cmdPrefix..cmdString].permsLevel = permLevel
+    self[cmdPrefix..cmdString].permLevel = permLevel
 
 end
 
@@ -54,6 +54,7 @@ hook.Add("PlayerSay", "FMS CommandCheck", function(ply,text)
             else
                 FMSUtils.NetColoredChatMsg(ply,Color(170,0,255),'You do not have permission to use '..cmdName)
             end
+            FMSUtils.LogMessage("Player "..FMSUtils.NickAndID64(ply).." attempted to use command: "..cmdName.."\nArguemnts[\n\t"..table.concat(args,"\n\t").."\n\t]")
         end
         return ""
     else
