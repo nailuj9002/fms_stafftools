@@ -40,21 +40,17 @@ hook.Add("PlayerSay", "FMS CommandCheck", function(ply,text)
         if (#args-1) < #command.argTable or (#args-1) > #command.argTable then
             FMSUtils.NetColoredChatMsg(ply,Color(170,0,255),'The argument length for the command "'..cmdName..'" differs from the expected length.\nExpected '..#FMSCmds[cmdName].argTable..' arguments got '..#args-1)
         else
+            FMSUtils.LogMessage("Player "..FMSUtils.NickAndID64(ply).." attempted to use command: "..cmdName.."\nArguments\n[\n\t"..table.concat(args,"\n\t").."\n]")
             if ply:GetPermLevel() >= command.permLevel then
                 local inferedArgs = {}
 
                 for k,v in ipairs(command.argTable) do
-                    if k == 1 then
-                    else
-                        table.insert(inferedArgs,FMSCmds.InferStringToType(v,args[k]))
-                    end
+                    table.insert(inferedArgs,FMSCmds.InferStringToType(v,args[k+1]))
                 end
-
                 command.func(ply,inferedArgs)
             else
                 FMSUtils.NetColoredChatMsg(ply,Color(170,0,255),'You do not have permission to use '..cmdName)
             end
-            FMSUtils.LogMessage("Player "..FMSUtils.NickAndID64(ply).." attempted to use command: "..cmdName.."\nArguemnts[\n\t"..table.concat(args,"\n\t").."\n\t]")
         end
         return ""
     else

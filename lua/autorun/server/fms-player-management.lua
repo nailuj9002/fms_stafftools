@@ -17,7 +17,8 @@ function FMSGroups.GetGroups()
 end
 
 function FMSGroups.GetGroupData(groupName)
-    return sql.QueryTyped("SELECT * FROM 'FMS-GroupData' WHERE GroupName = ?",groupName)[1]
+    local GroupData = sql.QueryTyped("SELECT * FROM 'FMS-GroupData' WHERE GroupName = ?",groupName)[1]
+    return GroupData
 end
 
 function FMSGroups.GetGroupMembers(groupName)
@@ -50,21 +51,18 @@ function meta:GetPermLevel()
             self:RemoveFromGroup(v)
         end
     end
-    PrintMessage(HUD_PRINTTALK,permLevel)
     return permLevel
 end
 
 function meta:GetGroups()
-    ply = sql.QueryTyped("SELECT * FROM 'FMS-PlyData' WHERE SteamID64 = ?", self:SteamID64())
-
+    local Id64 = self:SteamID64()
+    ply = sql.QueryTyped("SELECT * FROM 'FMS-PlyData' WHERE SteamID64 = ?", Id64)[1]
     
-    if ply == nil or ply["groups"] == nil then
-        sql.QueryTyped("INSERT INTO 'FMS-PlyData' (SteamID64) VALUES (?)", self:SteamID64())
+    if ply == false or ply["groups"] == nil then
+        print(sql.QueryTyped("INSERT INTO 'FMS-PlyData' (SteamID64) VALUES ( ? )", Id64))
         return {}
     else
-        groups = string.Explode(", ", ply["groups"])
-        PrintTable(groups)
-        return groups
+        return string.Explode(", ", ply["groups"])
     end
 end
 
@@ -77,14 +75,13 @@ function meta:RemoveFromGroup(groupName)
 end
 
 function meta:AddToGroup(groupName)
+    PrintTable(FMSGroups.GetGroupData("user"))
     if FMSGroups.GetGroupData(groupName) ~= nil then
         groups = self:GetGroups()
-        PrintTable(groups)
         table.insert(groups, groupName)
         PrintTable(groups)
 
         nGroups = table.concat(groups,', ')
-        print(nGroups)
         sql.QueryTyped("UPDATE 'FMS-PlyData' SET groups = ? WHERE SteamID64 = ?", nGroups, self:SteamID64())
     end
 end

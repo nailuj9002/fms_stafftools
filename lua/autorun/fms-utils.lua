@@ -5,7 +5,7 @@ if SERVER then
         local players = player.GetAll()
         for k, ply in ipairs(players) do
             if string.find(ply:Nick(),plyName) then
-                return v
+                return ply
             end
         end
     end
