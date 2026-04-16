@@ -23,6 +23,24 @@ if SERVER then
         end
     end
 
+    function FMSUtils.InstanceCount(tbl,value)
+        local count = 0
+        if isstring(value) then
+            for k,v in pairs(tbl) do
+                if string.find(v,value) then
+                    count = count+1
+                end
+            end
+        elseif isnumber(value) then
+            for k,v in pairs(tbl) do
+                if v == value then
+                    count = count+1
+                end
+            end
+        end
+        return count
+    end
+
     function FMSUtils.LogMessage(string)
         file.CreateDir("fluffy-mod-suite/logs/"..os.date("%Y/%B"))
 

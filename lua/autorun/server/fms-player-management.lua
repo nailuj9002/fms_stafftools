@@ -1,5 +1,5 @@
-sql.Query("CREATE TABLE IF NOT EXISTS 'FMS-PlyData' (SteamID64 BIT(64) PRIMARY KEY, groups STRING)")
-sql.Query("CREATE TABLE IF NOT EXISTS 'FMS-GroupData' (GroupName STRING UNIQUE, Rank BIT(8), Color BLOB)")
+sql.Query("CREATE TABLE IF NOT EXISTS 'FMS-PlyData' (SteamID64 BIT(64) PRIMARY KEY, groups STRING, joinCount INT)")
+sql.Query("CREATE TABLE IF NOT EXISTS 'FMS-GroupData' (GroupName STRING UNIQUE, Rank BIT(8), Color BLOB, JoinNeeded INT)")
 
 FMSGroups = {}
 

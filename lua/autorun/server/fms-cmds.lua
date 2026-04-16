@@ -37,16 +37,25 @@ hook.Add("PlayerSay", "FMS CommandCheck", function(ply,text)
     if FMSCmds[cmdName] ~= nil then
         local command = FMSCmds[cmdName]
 
-        if (#args-1) < #command.argTable or (#args-1) > #command.argTable then
-            FMSUtils.NetColoredChatMsg(ply,Color(170,0,255),'The argument length for the command "'..cmdName..'" differs from the expected length.\nExpected '..#FMSCmds[cmdName].argTable..' arguments got '..#args-1)
+        if (#args-1) < (#command.argTable-FMSUtils.InstanceCount(command.argTable,"Optional")) or (#args-1) > #command.argTable and (!table.HasValue(command.argTable,"OptionalVar")) then
+            FMSUtils.NetColoredChatMsg(ply,Color(170,0,255),'The argument length for the command "'..cmdName..'" differs from the expected length.\nExpected '..(#FMSCmds[cmdName].argTable-FMSUtils.InstanceCount(command.argTable,"Optional"))..' arguments got '..#args-1)
         else
             FMSUtils.LogMessage("Player "..FMSUtils.NickAndID64(ply).." attempted to use command: "..cmdName.."\nArguments\n[\n\t"..table.concat(args,"\n\t").."\n]")
             if ply:GetPermLevel() >= command.permLevel then
                 local inferedArgs = {}
 
                 for k,v in ipairs(command.argTable) do
-                    table.insert(inferedArgs,FMSCmds.InferStringToType(v,args[k+1]))
+                    if !string.find(v,"Optional") then
+                        table.insert(inferedArgs,FMSCmds.InferStringToType(v,args[k+1]))
+                    else
+                        if v == "OptionalVar" then
+                            table.insert(inferedArgs,table.concat(args,' ',k+1))
+                        else
+                            table.insert(inferedArgs,v)
+                        end
+                    end
                 end
+
                 command.func(ply,inferedArgs)
             else
                 FMSUtils.NetColoredChatMsg(ply,Color(170,0,255),'You do not have permission to use '..cmdName)
