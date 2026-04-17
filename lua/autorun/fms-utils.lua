@@ -1,11 +1,13 @@
 FMSUtils = {}
 
 if SERVER then
-    function FMSUtils.PlayerFromName(plyName)
+    function FMSUtils.GetPlayer(plyName)
         local players = player.GetAll()
         for k, ply in ipairs(players) do
-            if string.find(ply:Nick(),plyName) then
+            if string.find(ply:Nick(),plyName) or ply:SteamID64() == plyName or ply:SteamID() == plyName then
                 return ply
+            else
+                return plyname
             end
         end
     end
@@ -49,7 +51,7 @@ if SERVER then
     end
 else
 
-    --SingularPlayerNetColoredMessage
+    --ReceiveNetColoredMessage
     net.Receive("NetColoredChatMsg", function(len,ply)
         local tbl = net.ReadTable()
         chat.AddText(unpack(tbl))

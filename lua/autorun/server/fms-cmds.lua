@@ -21,7 +21,7 @@ end
 
 function FMSCmds.InferStringToType(StringType,Value)
     FMSCmds.StringTypes = {}
-    FMSCmds.StringTypes["Player"] = FMSUtils.PlayerFromName or player.GetBySteamID64 or player.GetBySteamID
+    FMSCmds.StringTypes["Player"] = FMSUtils.GetPlayer
     FMSCmds.StringTypes["String"] = tostring
     FMSCmds.StringTypes["Int"] = tonumber
 
