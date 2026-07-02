@@ -61,7 +61,7 @@ FMSCmds:registerCommand("kick", argTable, 255, function(ply, args)
             FMSUtils.LogMessage(FMSUtils.NickAndID64(ply)..' Kicked '..NickAndID)
         else
             args[1]:Kick(args[2])
-            FMSUtils.LogMessage(FMSUtils.NickAndID64(ply)..' Kicked '..NickAndID.."\nReason: "..args[2])
+            FMSUtils.LogMessage(FMSUtils.NickAndID64(ply)..' Kicked '..NickAndID.."\nReason: "..table.concat(args,' ',2))
         end
     end
 end)
@@ -97,9 +97,9 @@ FMSCmds:registerCommand("ban", argTable, 255, function(ply, args)
             sql.QueryTyped("INSERT INTO 'FMS-PunishmentData' (PlayerID, StaffID, Date, ExpireDate, Type) VALUES(?,?,?,?,?)",ID,ply:SteamID64(),os.time(),os.time()+time,'BAN')
         else
 
-            game.KickID(ID,args[3])
+            game.KickID(ID,table.concat(args,' ',3))
             FMSUtils.LogMessage(FMSUtils.NickAndID64(ply)..' Banned '..ID..' for '..time..'.\nReason: '..args[3])
-            sql.QueryTyped("INSERT INTO 'FMS-PunishmentData' (PlayerID, StaffID, Date, ExpireDate, Type, Reason) VALUES(?,?,?,??)",ID,ply:SteamID64(),os.time(),os.time()+time,'BAN',args[3])
+            sql.QueryTyped("INSERT INTO 'FMS-PunishmentData' (PlayerID, StaffID, Date, ExpireDate, Type, Reason) VALUES(?,?,?,?,?,?)",ID,ply:SteamID64(),os.time(),os.time()+time,'BAN',table.concat(args,' ',3))
         end
     end
 end)
